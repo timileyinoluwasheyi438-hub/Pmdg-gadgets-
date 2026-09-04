@@ -73,13 +73,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pmdg_store.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+_db = os.environ.get('DATABASE_URL', '').strip().strip('"').strip("'")
+if _db:
+    DATABASES = {
+        'default': dj_database_url.parse(_db, conn_max_age=0, ssl_require=True)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
