@@ -1,0 +1,52 @@
+{% extends 'store/base.html' %}
+{% block title %}Create Account — PMDG Technology Solution Ltd{% endblock %}
+
+{% block content %}
+<section class="max-w-md mx-auto px-4 sm:px-6 py-16">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-2">Create your account</h1>
+  <p class="text-gray-500 text-center mb-8">Track orders, save favourites, and check out faster.</p>
+
+  {% if form.non_field_errors %}
+  <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-6 text-sm text-center">
+    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8">
+    {% csrf_token %}
+
+    <label class="block font-semibold text-gray-900 mb-2" for="id_first_name">Name</label>
+    <input type="text" id="id_first_name" name="first_name" placeholder="Your name" required
+      value="{{ form.first_name.value|default:'' }}"
+      class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-1 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500">
+    {% if form.first_name.errors %}<p class="text-red-500 text-sm mb-4">{{ form.first_name.errors.0 }}</p>{% else %}<div class="mb-6"></div>{% endif %}
+
+    <label class="block font-semibold text-gray-900 mb-2" for="id_email">Email</label>
+    <input type="email" id="id_email" name="email" placeholder="your@email.com" required
+      value="{{ form.email.value|default:'' }}"
+      class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-1 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500">
+    {% if form.email.errors %}<p class="text-red-500 text-sm mb-4">{{ form.email.errors.0 }}</p>{% else %}<div class="mb-6"></div>{% endif %}
+
+    <label class="block font-semibold text-gray-900 mb-2" for="id_password1">Password</label>
+    <input type="password" id="id_password1" name="password1" placeholder="At least 6 characters" required
+      class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-6 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500">
+
+    <label class="block font-semibold text-gray-900 mb-2" for="id_password2">Confirm password</label>
+    <input type="password" id="id_password2" name="password2" placeholder="••••••••" required
+      class="w-full border border-gray-200 rounded-xl px-4 py-3 mb-6 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500">
+
+    {% if form.non_field_errors %}
+    <p class="text-red-500 text-sm mb-4">{{ form.non_field_errors.0 }}</p>
+    {% endif %}
+
+    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 rounded-xl transition-colors">
+      Create Account
+    </button>
+  </form>
+
+  <p class="text-center text-gray-500 mt-6">
+    Already have an account?
+    <a href="{% url 'login' %}" class="text-primary-600 font-semibold hover:text-primary-700">Sign in</a>
+  </p>
+</section>
+{% endblock %}

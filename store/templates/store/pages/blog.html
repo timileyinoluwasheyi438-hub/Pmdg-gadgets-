@@ -1,0 +1,46 @@
+{% extends 'store/base.html' %}
+{% load humanize %}
+{% block title %}Blog — PMDG Technology Solution Ltd{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-16">
+  <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-4">From the Blog</h1>
+  <p class="text-gray-500 text-center mb-12">Tips, guides, and news from the world of laptops.</p>
+
+  <div class="space-y-8">
+    <article class="bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col sm:flex-row">
+      <div class="sm:w-64 h-48 sm:h-auto bg-gray-100 flex-shrink-0">
+        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop" alt="Blog post" class="w-full h-full object-cover">
+      </div>
+      <div class="p-6">
+        <span class="text-xs font-semibold text-primary-600 uppercase tracking-wider">Buying Guide</span>
+        <h2 class="text-xl font-bold text-gray-900 mt-2 mb-2">How to Choose the Right Laptop for Your Business</h2>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Whether you're a freelancer or running a full team, the right business laptop can make or break your productivity. Here's what to look for.</p>
+        <span class="text-xs text-gray-400">Aug 28, 2024 · 5 min read</span>
+      </div>
+    </article>
+    <article class="bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col sm:flex-row">
+      <div class="sm:w-64 h-48 sm:h-auto bg-gray-100 flex-shrink-0">
+        <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop" alt="Blog post" class="w-full h-full object-cover">
+      </div>
+      <div class="p-6">
+        <span class="text-xs font-semibold text-primary-600 uppercase tracking-wider">Refurbished</span>
+        <h2 class="text-xl font-bold text-gray-900 mt-2 mb-2">Why Refurbished Laptops Are a Smart Buy in 2024</h2>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Refurbished doesn't mean second-best. Learn why certified refurbished laptops offer incredible value without compromising on quality.</p>
+        <span class="text-xs text-gray-400">Aug 15, 2024 · 4 min read</span>
+      </div>
+    </article>
+    <article class="bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col sm:flex-row">
+      <div class="sm:w-64 h-48 sm:h-auto bg-gray-100 flex-shrink-0">
+        <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=400&h=300&fit=crop" alt="Blog post" class="w-full h-full object-cover">
+      </div>
+      <div class="p-6">
+        <span class="text-xs font-semibold text-primary-600 uppercase tracking-wider">Students</span>
+        <h2 class="text-xl font-bold text-gray-900 mt-2 mb-2">Best Budget Laptops for Nigerian Students</h2>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">From coding to design to everyday coursework, we break down the best affordable laptops that won't break the bank.</p>
+        <span class="text-xs text-gray-400">Jul 30, 2024 · 6 min read</span>
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}

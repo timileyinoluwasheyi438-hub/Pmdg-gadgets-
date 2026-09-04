@@ -1,0 +1,54 @@
+{% comment %}
+Single order status partial. Renders the real Temu-style checkpoint timeline
+if TrackingEvents exist; otherwise falls back to the simple 4-stage tracker.
+No {% include %} calls inside this file — keep it that way to avoid recursion.
+{% endcomment %}
+
+{% with events=order.tracking_events.all %}
+{% if events %}
+<div class="space-y-0">
+  {% for event in events %}
+  <div class="flex gap-4">
+    <div class="flex flex-col items-center">
+      <div class="w-3 h-3 rounded-full flex-shrink-0 {% if forloop.last %}bg-primary-600{% else %}bg-primary-200{% endif %}"></div>
+      {% if not forloop.last %}<div class="w-0.5 flex-1 bg-primary-200 my-1"></div>{% endif %}
+    </div>
+    <div class="pb-6">
+      <p class="font-semibold text-gray-900 {% if forloop.last %}text-primary-700{% endif %}">{{ event.title }}</p>
+      {% if event.location %}<p class="text-gray-500 text-sm">{{ event.location }}</p>{% endif %}
+      {% if event.note %}<p class="text-gray-400 text-sm mt-0.5">{{ event.note }}</p>{% endif %}
+      <p class="text-gray-400 text-xs mt-1">{{ event.timestamp|date:"M d, Y — g:i A" }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+{% with s=order.status %}
+<div class="flex items-center justify-between">
+  <div class="flex-1 flex flex-col items-center">
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+      {% if s == 'pending' or s == 'processing' or s == 'shipped' or s == 'delivered' %}bg-primary-600 text-white{% else %}bg-gray-100 text-gray-400{% endif %}">1</div>
+    <p class="text-xs mt-2 {% if s == 'pending' %}text-primary-700 font-semibold{% else %}text-gray-400{% endif %}">Pending</p>
+  </div>
+  <div class="flex-1 h-0.5 -mt-6 {% if s == 'processing' or s == 'shipped' or s == 'delivered' %}bg-primary-600{% else %}bg-gray-200{% endif %}"></div>
+  <div class="flex-1 flex flex-col items-center">
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+      {% if s == 'processing' or s == 'shipped' or s == 'delivered' %}bg-primary-600 text-white{% else %}bg-gray-100 text-gray-400{% endif %}">2</div>
+    <p class="text-xs mt-2 {% if s == 'processing' %}text-primary-700 font-semibold{% else %}text-gray-400{% endif %}">Processing</p>
+  </div>
+  <div class="flex-1 h-0.5 -mt-6 {% if s == 'shipped' or s == 'delivered' %}bg-primary-600{% else %}bg-gray-200{% endif %}"></div>
+  <div class="flex-1 flex flex-col items-center">
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+      {% if s == 'shipped' or s == 'delivered' %}bg-primary-600 text-white{% else %}bg-gray-100 text-gray-400{% endif %}">3</div>
+    <p class="text-xs mt-2 {% if s == 'shipped' %}text-primary-700 font-semibold{% else %}text-gray-400{% endif %}">Shipped</p>
+  </div>
+  <div class="flex-1 h-0.5 -mt-6 {% if s == 'delivered' %}bg-primary-600{% else %}bg-gray-200{% endif %}"></div>
+  <div class="flex-1 flex flex-col items-center">
+    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+      {% if s == 'delivered' %}bg-primary-600 text-white{% else %}bg-gray-100 text-gray-400{% endif %}">4</div>
+    <p class="text-xs mt-2 {% if s == 'delivered' %}text-primary-700 font-semibold{% else %}text-gray-400{% endif %}">Delivered</p>
+  </div>
+</div>
+{% endwith %}
+{% endif %}
+{% endwith %}

@@ -1,0 +1,96 @@
+{% extends 'store/base.html' %}
+{% load humanize %}
+{% block title %}{{ product.name }} — PMDG Technology Solution Ltd{% endblock %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12">
+  <!-- Breadcrumb -->
+  <a href="{% url 'shop' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm mb-6 transition-colors">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to all products
+  </a>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+    <!-- Image -->
+    <div class="bg-gray-100 rounded-3xl overflow-hidden aspect-square flex items-center justify-center">
+      <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Details -->
+    <div class="flex flex-col">
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">{{ product.name }}</h1>
+      <div class="flex items-center gap-3 mt-3">
+        <span class="text-3xl font-bold text-primary-600">₦{{ product.price|floatformat:0|intcomma }}</span>
+        {% if product.original_price %}
+        <span class="text-xl text-gray-400 line-through">₦{{ product.original_price|floatformat:0|intcomma }}</span>
+        {% endif %}
+      </div>
+      <p class="text-gray-500 mt-4 leading-relaxed">{{ product.description }}</p>
+
+      <!-- Specs -->
+      <div class="mt-6 bg-gray-50 rounded-2xl p-5">
+        <h3 class="font-semibold text-gray-900 text-sm mb-3">Specifications</h3>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div><span class="text-gray-400">Processor:</span> <span class="text-gray-700 font-medium">{{ product.specs.processor }}</span></div>
+          <div><span class="text-gray-400">RAM:</span> <span class="text-gray-700 font-medium">{{ product.specs.ram }}</span></div>
+          <div><span class="text-gray-400">Storage:</span> <span class="text-gray-700 font-medium">{{ product.specs.storage }}</span></div>
+          <div><span class="text-gray-400">Screen:</span> <span class="text-gray-700 font-medium">{{ product.specs.screen }}</span></div>
+          <div class="col-span-2"><span class="text-gray-400">OS:</span> <span class="text-gray-700 font-medium">{{ product.specs.os }}</span></div>
+        </div>
+      </div>
+
+      <!-- Quantity + Add to Cart -->
+      <div class="mt-6">
+        <label class="block text-sm font-semibold text-gray-900 mb-2">Quantity</label>
+        <div class="flex items-center gap-3">
+          <button id="qty-minus" class="qty-btn" onclick="updateQty(-1)">−</button>
+          <span id="qty-display" class="text-lg font-semibold w-8 text-center">1</span>
+          <button id="qty-plus" class="qty-btn" onclick="updateQty(1)">+</button>
+        </div>
+      </div>
+
+      <button onclick="addToCart()" class="mt-6 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 text-lg">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  {% if related %}
+  <div class="mt-16">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">You may also like</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for p in related %}
+      <a href="{% url 'product_detail' p.slug %}" class="product-card bg-white border border-gray-100 rounded-2xl overflow-hidden group">
+        <div class="relative aspect-[4/3] bg-gray-100 overflow-hidden">
+          <img src="{{ p.get_image }}" alt="{{ p.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        </div>
+        <div class="p-4">
+          <h3 class="font-semibold text-gray-900 text-sm truncate">{{ p.name }}</h3>
+          <span class="text-primary-600 font-bold text-sm mt-1 block">₦{{ p.price|floatformat:0|intcomma }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<script>
+let qty = 1;
+function updateQty(delta) {
+  qty = Math.max(1, qty + delta);
+  document.getElementById('qty-display').textContent = qty;
+}
+function addToCart() {
+  PMDG.addToCart({
+    id: "{{ product.id }}",
+    name: "{{ product.name }}",
+    price: "{{ product.price }}",
+    image: "{{ product.image }}",
+    qty: qty
+  });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Logo */
+.logo-globe {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 40%, #0ea5e9 60%, #1e3a8a 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-globe::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.15) 3px, rgba(255,255,255,0.15) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(255,255,255,0.15) 6px, rgba(255,255,255,0.15) 7px);
+  border-radius: 50%;
+}
+.logo-sun {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  background: #f59e0b;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(245,158,11,0.6);
+}
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Cart slide animation */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.cart-slide-in { animation: slideInRight 0.3s ease-out; }
+
+/* Mobile menu */
+.mobile-menu {
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+.mobile-menu.open { transform: translateX(0); }
+
+/* Cookie banner */
+.cookie-banner {
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+}
+.cookie-banner.show { transform: translateY(0); }
+
+/* Hero image overlay */
+.hero-img { object-fit: cover; object-position: center; }
+
+/* Quantity buttons */
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.qty-btn:hover { background: #f3f4f6; }
+.qty-btn:active { background: #e5e7eb; }
+
+/* Step indicators */
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+.step-active {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+.step-inactive {
+  background: white;
+  color: #9ca3af;
+  border: 2px solid #e5e7eb;
+}
+
+/* Category card hover */
+.cat-card { transition: transform 0.2s, box-shadow 0.2s; }
+.cat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+
+/* Product card */
+.product-card { transition: box-shadow 0.2s; }
+.product-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+
+/* WhatsApp pulse */
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(37,211,102,0); }
+}
+.whatsapp-btn { animation: pulse-green 2s infinite; }
+.step-complete {
+  background: #2563eb;
+  color: white;
+  border: 2px solid #2563eb;
+}
+.mobile-menu {
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+.mobile-menu.open {
+  transform: translateX(0);
+}

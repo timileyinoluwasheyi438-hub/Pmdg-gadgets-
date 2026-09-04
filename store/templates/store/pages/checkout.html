@@ -1,0 +1,265 @@
+{% extends 'store/base.html' %}
+{% load humanize %}
+{% block title %}Checkout — PMDG Technology Solution Ltd{% endblock %}
+
+{% block content %}
+<section class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 pb-12">
+  <form class="hidden">{% csrf_token %}</form>
+
+  <a id="back-to-cart" href="{% url 'cart' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm mb-6">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Back to cart
+  </a>
+
+  <div class="flex items-center justify-center gap-4 mb-10">
+    <div class="flex flex-col items-center gap-2">
+      <div id="step-circle-1" class="step-circle step-active">1</div>
+      <span id="step-label-1" class="text-xs font-medium text-primary-600">Contact</span>
+    </div>
+    <div class="w-16 h-px bg-gray-200"></div>
+    <div class="flex flex-col items-center gap-2">
+      <div id="step-circle-2" class="step-circle step-inactive">2</div>
+      <span id="step-label-2" class="text-xs font-medium text-gray-400">Shipping</span>
+    </div>
+    <div class="w-16 h-px bg-gray-200"></div>
+    <div class="flex flex-col items-center gap-2">
+      <div id="step-circle-3" class="step-circle step-inactive">3</div>
+      <span id="step-label-3" class="text-xs font-medium text-gray-400">Review</span>
+    </div>
+  </div>
+
+  {% if not user.is_authenticated %}
+  <div class="bg-primary-50 border border-primary-100 text-primary-700 rounded-xl px-4 py-3 mb-8 text-sm text-center">
+    <a href="{% url 'login' %}?next={% url 'checkout' %}" class="font-semibold underline">Sign in</a>
+    to check out faster, or continue as a guest.
+  </div>
+  {% endif %}
+
+  <div id="checkout-error" class="hidden bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-6 text-sm text-center"></div>
+
+  <div id="step-1">
+    <h1 class="text-2xl font-bold text-gray-900 mb-8">Contact information</h1>
+    <div class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-900 mb-2">First name <span class="text-red-500">*</span></label>
+        <input type="text" id="first_name" value="{{ request.user.first_name|default:'' }}" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 mb-2">Last name <span class="text-red-500">*</span></label>
+        <input type="text" id="last_name" value="{{ request.user.last_name|default:'' }}" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 mb-2">Email <span class="text-red-500">*</span></label>
+        <input type="email" id="email" value="{{ request.user.email|default:'' }}" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 mb-2">Phone</label>
+        <input type="tel" id="phone" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <button type="button" onclick="goToStep(2)" class="w-full bg-primary-600 text-white font-semibold py-4 rounded-2xl">Continue to shipping</button>
+    </div>
+  </div>
+
+  <div id="step-2" class="hidden">
+    <h1 class="text-2xl font-bold text-gray-900 mb-8">Shipping address</h1>
+    <div class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-2">Street address <span class="text-red-500">*</span></label>
+        <input type="text" id="street_address" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">Apartment</label>
+        <input type="text" id="apartment" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">City <span class="text-red-500">*</span></label>
+        <input type="text" id="city" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">State <span class="text-red-500">*</span></label>
+        <input type="text" id="state" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">Postal code</label>
+        <input type="text" id="postal_code" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-2">Country</label>
+        <input type="text" id="country" value="Nigeria" class="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm outline-none">
+      </div>
+      <div class="flex gap-3">
+        <button type="button" onclick="goToStep(1)" class="flex-1 border border-gray-200 font-semibold py-4 rounded-2xl">Back</button>
+        <button type="button" onclick="goToStep(3)" class="flex-[2] bg-primary-600 text-white font-semibold py-4 rounded-2xl">Review order</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="step-3" class="hidden">
+    <h1 class="text-2xl font-bold text-gray-900 mb-8">Review &amp; place order</h1>
+    <div class="border border-gray-200 rounded-2xl p-5 mb-4">
+      <p class="text-sm text-gray-500 mb-2">Contact</p>
+      <p id="review-name" class="font-medium"></p>
+      <p id="review-email" class="text-gray-500"></p>
+      <p id="review-phone" class="text-gray-500"></p>
+    </div>
+    <div class="border border-gray-200 rounded-2xl p-5 mb-6">
+      <p class="text-sm text-gray-500 mb-2">Shipping</p>
+      <p id="review-street"></p>
+      <p id="review-apartment"></p>
+      <p id="review-citystate" class="text-gray-500"></p>
+      <p id="review-country" class="text-gray-500"></p>
+    </div>
+    <div class="border border-gray-200 rounded-2xl p-5 mb-6">
+      <p class="text-sm text-gray-500 mb-2">Items (<span id="review-item-count"></span>)</p>
+      <div id="review-items"></div>
+      <div class="flex justify-between pt-3 mt-3 border-t">
+        <span class="font-semibold">Total</span>
+        <span id="review-total" class="font-bold text-primary-600"></span>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <button type="button" onclick="goToStep(2)" class="flex-1 border border-gray-200 font-semibold py-4 rounded-2xl">Back</button>
+      <button type="button" id="place-order-btn" onclick="placeOrder()" class="flex-[2] bg-primary-600 text-white font-semibold py-4 rounded-2xl">Place order</button>
+    </div>
+  </div>
+
+  <div class="mt-10 bg-gray-50 rounded-2xl p-5">
+    <h3 class="font-semibold mb-4">Order summary</h3>
+    <div id="checkout-summary"></div>
+  </div>
+</section>
+
+<script>
+let currentStep = 1;
+
+function goToStep(step) {
+  document.getElementById('step-' + currentStep).classList.add('hidden');
+  document.getElementById('step-' + step).classList.remove('hidden');
+  currentStep = step;
+  if (step === 3) fillReview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function getContactData() {
+  return {
+    first_name: val('first_name'),
+    last_name: val('last_name'),
+    email: val('email'),
+    phone: val('phone'),
+  };
+}
+
+function getShippingData() {
+  return {
+    street_address: val('street_address'),
+    apartment: val('apartment'),
+    city: val('city'),
+    state: val('state'),
+    postal_code: val('postal_code'),
+    country: val('country') || 'Nigeria',
+  };
+}
+
+function getCookie(name) {
+  const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return match ? match.pop() : '';
+}
+
+function showError(msg) {
+  const box = document.getElementById('checkout-error');
+  box.textContent = msg;
+  box.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function fillReview() {
+  const c = getContactData();
+  const s = getShippingData();
+  const cart = (window.PMDG && PMDG.getCart) ? PMDG.getCart() : [];
+  document.getElementById('review-name').textContent = c.first_name + ' ' + c.last_name;
+  document.getElementById('review-email').textContent = c.email;
+  document.getElementById('review-phone').textContent = c.phone || '—';
+  document.getElementById('review-street').textContent = s.street_address;
+  document.getElementById('review-apartment').textContent = s.apartment;
+  document.getElementById('review-citystate').textContent = s.city + ', ' + s.state + ' ' + s.postal_code;
+  document.getElementById('review-country').textContent = s.country;
+  document.getElementById('review-item-count').textContent = cart.length;
+  let subtotal = 0;
+  document.getElementById('review-items').innerHTML = cart.map(function(item) {
+    subtotal += item.price * item.qty;
+    return '<div class="flex justify-between py-2 text-sm"><span>' + item.name + ' × ' + item.qty + '</span><span>' + (PMDG.formatPrice ? PMDG.formatPrice(item.price * item.qty) : item.price) + '</span></div>';
+  }).join('');
+  document.getElementById('review-total').textContent = PMDG.formatPrice ? PMDG.formatPrice(subtotal) : subtotal;
+}
+
+function renderCheckoutSummary() {
+  const cart = (window.PMDG && PMDG.getCart) ? PMDG.getCart() : [];
+  const box = document.getElementById('checkout-summary');
+  if (!box) return;
+  let subtotal = 0;
+  box.innerHTML = cart.map(function(item) {
+    subtotal += item.price * item.qty;
+    return '<div class="flex justify-between py-2"><span>' + item.name + ' × ' + item.qty + '</span><span>' + (PMDG.formatPrice ? PMDG.formatPrice(item.price * item.qty) : item.price) + '</span></div>';
+  }).join('') + '<div class="flex justify-between pt-3 font-bold"><span>Total</span><span>' + (PMDG.formatPrice ? PMDG.formatPrice(subtotal) : subtotal) + '</span></div>';
+}
+
+async function placeOrder() {
+  const btn = document.getElementById('place-order-btn');
+  btn.disabled = true;
+  btn.textContent = 'Redirecting to Paystack...';
+
+  const cart = (window.PMDG && PMDG.getCart) ? PMDG.getCart() : [];
+  if (!cart.length) {
+    showError('Your cart is empty.');
+    btn.disabled = false;
+    btn.textContent = 'Place order';
+    return;
+  }
+
+  const payload = Object.assign({}, getContactData(), getShippingData(), {
+    items: cart.map(function(item) {
+      return { id: item.id, name: item.name, price: item.price, qty: item.qty };
+    })
+  });
+
+  try {
+    const res = await fetch("{% url 'checkout_submit' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(function() { return {}; });
+    console.log('PAYSTACK RESPONSE', res.status, data);
+
+    if (!res.ok || !data.authorization_url) {
+      showError(data.error || 'Payment could not start.');
+      btn.disabled = false;
+      btn.textContent = 'Place order';
+      return;
+    }
+
+    try {
+      if (window.PMDG && typeof PMDG.clearCart === 'function') PMDG.clearCart();
+      else localStorage.removeItem('pmdg_cart');
+    } catch (e) {}
+
+    window.location.href = data.authorization_url;
+  } catch (err) {
+    console.error(err);
+    showError('Network error — try again.');
+    btn.disabled = false;
+    btn.textContent = 'Place order';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderCheckoutSummary);
+</script>
+{% endblock %}

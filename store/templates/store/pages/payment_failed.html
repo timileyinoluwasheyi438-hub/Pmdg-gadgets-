@@ -1,0 +1,24 @@
+{% extends 'store/base.html' %}
+{% block title %}Payment failed — PMDG{% endblock %}
+
+{% block content %}
+<style>
+  .pay-wrap{max-width:480px;margin:48px auto;padding:0 20px 64px;text-align:center}
+  .pay-icon{width:72px;height:72px;border-radius:50%;background:#fee2e2;color:#dc2626;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px}
+  .pay-wrap h1{font-size:28px;font-weight:800;color:#111;margin:0}
+  .pay-wrap p{color:#6b7280;margin:10px 0 0;line-height:1.5}
+  .pay-actions{display:flex;flex-direction:column;gap:10px;margin-top:28px}
+  .pay-btn{display:block;padding:14px 18px;border-radius:14px;font-weight:700;text-decoration:none}
+  .pay-btn.main{background:#2563eb;color:#fff}
+  .pay-btn.ghost{background:#fff;color:#111;border:1px solid #e5e7eb}
+</style>
+<div class="pay-wrap">
+  <div class="pay-icon">!</div>
+  <h1>Payment not completed</h1>
+  <p>No money was taken. You can try again from checkout. Your cart items may still be there.</p>
+  <div class="pay-actions">
+    <a class="pay-btn main" href="{% url 'checkout' %}">Try checkout again</a>
+    <a class="pay-btn ghost" href="{% url 'cart' %}">Back to cart</a>
+  </div>
+</div>
+{% endblock %}
